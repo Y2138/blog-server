@@ -6,6 +6,8 @@ import { fluentProvide } from 'daruk'
 import { config } from '../config/config'
 
 const { dbName, host, port, user, password, charset } = config.database
+import User from '../entity/user'
+import Article from '../entity/article'
 
 @(fluentProvide('Db').inSingletonScope().done())
 export default class Db {
@@ -19,6 +21,7 @@ export default class Db {
         port,
         host,
         database: dbName,
+        entities: [User, Article],
 
         // username: user,
         // password,

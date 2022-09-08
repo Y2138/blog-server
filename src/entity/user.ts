@@ -12,7 +12,7 @@ export default class User {
   code: string
 }
 
-export interface UserImpl {
+export interface UserInf {
   name: string,
   code: string
 }

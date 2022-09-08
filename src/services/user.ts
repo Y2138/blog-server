@@ -1,7 +1,7 @@
 import { DarukContext, inject, injectable, service } from 'daruk'
 import Db from '../glues/connection'
 import User from '../entity/user'
-import { UserImpl } from '../entity/user'
+import { UserInf } from '../entity/user'
 
 @service()
 export default class UserModel {
@@ -17,9 +17,10 @@ export default class UserModel {
     return user
   }
   
-  public async insertUser(userModel: UserImpl) {
-    let EntityManager = await this.Db.getManager();
-    let user = await EntityManager.create(User, userModel);
-    return EntityManager.save(user);
+  public async insertUser(userModel: UserInf) {
+    console.log('userModel: ', userModel)
+    let EntityManager = await this.Db.getManager()
+    let user = await EntityManager.create(User, userModel)
+    return EntityManager.insert(User, user)
   }
 }

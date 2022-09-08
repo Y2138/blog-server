@@ -18,6 +18,7 @@ class CatchError implements MiddlewareClass {
       try {
         await next()
       } catch (error) {
+        console.log('error: ', error)
         const isHttpException = error instanceof HttpException
         const isDev = config.environment === "dev"
         if (isDev && !isHttpException) {
@@ -28,6 +29,7 @@ class CatchError implements MiddlewareClass {
           ctx.body = {
             errMsg: error.errMsg,
             errorCode: error.errorCode,
+            code: error.code,
             request: `${ctx.method} ${ctx.path}`
           }
           ctx.response.status = error.code
@@ -35,6 +37,7 @@ class CatchError implements MiddlewareClass {
           ctx.body = {
             msg: '未知错误！',
             error_code: 9999,
+            code: error.code,
             request: `${ctx.method} ${ctx.path}`
           }
           ctx.response.status = 500

@@ -1,7 +1,5 @@
-import { controller, get, post, DarukContext, middleware, inject, prefix, Next } from 'daruk'
+import { controller, get, post, DarukContext, middleware, inject, prefix, Next, validate } from 'daruk'
 import UserModel from '../services/user'
-import { UserImpl } from '../entity/user'
-import { ParameterException } from '../glues/http-exception'
 @controller()
 @prefix('/user')
 class User {
@@ -15,7 +13,7 @@ class User {
   @post('/add')
   public async addUser(ctx: DarukContext, next: Next) {
     let { body } = ctx.request
-    await this.UserModel.insertUser(body.model)
+    await this.UserModel.insertUser(body)
     ctx.body = {
       model: true,
       success: true,
@@ -23,7 +21,7 @@ class User {
     await next()
   }
 
-  // @middleware('catch-error')
+
   @get('/get')
   public async getUser(ctx: DarukContext, next: Next) {
     let { query } = ctx.request
