@@ -12,7 +12,7 @@ export default class Article {
   desc: string;
 
   @Column()
-  tag: string[];
+  tags: number[];
 
   @Column()
   content: string

@@ -21,22 +21,10 @@ class Article {
     let { body } = ctx.request
     await this.ArticleModel.insertArticle(body)
     ctx.body = {
-      model: true,
       success: true,
+      model: true,
     }
     // await next()
-  }
-
-  @post('/getArticle/list')
-  public async articleList(ctx: DarukContext, next: Next) {
-    let { body } = ctx.request
-    let { model, totalCount } = await this.ArticleModel.findArticleList(body)
-    ctx.body = {
-      model,
-      totalCount,
-      success: true
-    }
-    await next()
   }
 
   @get('/get')
@@ -47,8 +35,28 @@ class Article {
     }
     let article = await this.ArticleModel.findArticleById(Number(query.id))
     ctx.body = {
-      model: article,
       success: true,
+      model: article,
+    }
+    await next()
+  }
+  
+  @post('/getArticle/list')
+  public async findArticle(ctx: DarukContext, next: Next) {
+    let { body = {} } = ctx.request
+    let { model = {}, pageIndex = 1, pageSize = 10, } = body
+    if (!model) {
+      throw new ParameterException('参数异常')  
+    }
+    console.log('-->', model, pageIndex, pageSize)
+    let res = await this.ArticleModel.findArticleByTitle({
+      model,
+      pageIndex,
+      pageSize
+    })
+    ctx.body = {
+      success: true,
+      ...res
     }
     await next()
   }

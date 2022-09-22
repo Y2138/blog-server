@@ -2,6 +2,14 @@ import { DarukContext, inject, injectable, service } from 'daruk'
 import Db from '../glues/connection'
 import Article from '../entity/article'
 
+interface anyObj {
+  [propsName: string]: any
+}
+interface PageModel {
+  model: anyObj,
+  pageIndex: number,
+  pageSize: number
+}
 @service()
 export default class ArticleModel {
   public ctx!: DarukContext
@@ -14,6 +22,32 @@ export default class ArticleModel {
       }
     })
     return art
+  }
+
+  public async findArticleByTitle(param: PageModel) {
+    let repository = await this.Db.getRepository(Article)
+    let { model, pageIndex, pageSize } = param
+    let { title = '' } = model
+    let total = await repository.find({
+      where: {
+        title: new RegExp(`${title}`)
+      }
+    })
+    let skipCount = pageSize * (pageIndex - 1)
+    let art = await repository.find({
+      where: {
+        title: new RegExp(`${title}`)
+      },
+      take: pageSize || 10, // 页数
+      skip: skipCount > total.length ? skipCount - pageSize : skipCount // 偏移量
+    })
+    console.log('---->', title, total, art)
+    return {
+      model: art,
+      totalCount: total.length,
+      pageIndex,
+      pageSize
+    }
   }
 
   public async findArticleList(model) {

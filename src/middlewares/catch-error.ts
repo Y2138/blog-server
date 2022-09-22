@@ -27,6 +27,7 @@ class CatchError implements MiddlewareClass {
         if (isHttpException) {
           // TODO
           ctx.body = {
+            success: false,
             errMsg: error.errMsg,
             errorCode: error.errorCode,
             code: error.code,
@@ -35,6 +36,7 @@ class CatchError implements MiddlewareClass {
           ctx.response.status = error.code
         } else {
           ctx.body = {
+            success: false,
             msg: '未知错误！',
             error_code: 9999,
             code: error.code,
