@@ -44,11 +44,11 @@ class Article {
   @post('/getArticle/list')
   public async findArticle(ctx: DarukContext, next: Next) {
     let { body = {} } = ctx.request
-    let { model = {}, pageIndex = 1, pageSize = 10, } = body
+    let { model = {}, pageIndex = 1, pageSize = 10, } = body.data || {}
     if (!model) {
       throw new ParameterException('参数异常')  
     }
-    console.log('-->', model, pageIndex, pageSize)
+    console.log('-->', body, model, pageIndex, pageSize)
     let res = await this.ArticleModel.findArticleByTitle({
       model,
       pageIndex,
